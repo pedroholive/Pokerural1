@@ -14,3 +14,14 @@ Jogo em Python de pokemóns baseados em animais típicos da região nordeste do 
 
 ### Sistema de diálogo com os NPCs
 ![Diálogo](https://github.com/user-attachments/assets/a7388ab4-299c-41f9-af7b-8004335af933)
+
+## 🚀 INSTALAÇÃO E EXECUÇÃO
+
+Para rodar o **PokeRural**, é necessário instalar as bibliotecas.
+
+1.  **Instale as dependências:**
+    Abra o terminal na pasta do projeto e execute:
+    ```bash
+    pip install pygame-ce
+    pip instal pytmx
+    ```
