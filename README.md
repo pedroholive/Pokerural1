@@ -15,6 +15,15 @@ Jogo em Python de pokemóns baseados em animais típicos da região nordeste do 
 ### Sistema de diálogo com os NPCs
 ![Diálogo](https://github.com/user-attachments/assets/a7388ab4-299c-41f9-af7b-8004335af933)
 
+### Departamentos da Faculdade
+![Diálogo](https://github.com/user-attachments/assets/930732e8-d9ac-406a-993e-fbea855097d6)
+
+### Cursor para selecionar quem será atacado
+![Diálogo](https://github.com/user-attachments/assets/da3786ec-5235-4e2d-94f7-4d792184293f)
+
+### Ataques dos pokemons
+![Diálogo](https://github.com/user-attachments/assets/48a311d9-7a4e-4b2e-b03d-67e4157d6e66)
+
 ## 🚀 INSTALAÇÃO E EXECUÇÃO
 
 Para rodar o **PokeRural**, é necessário instalar as bibliotecas.
