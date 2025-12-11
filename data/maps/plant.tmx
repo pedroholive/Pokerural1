@@ -4,7 +4,7 @@
  <tileset firstgid="211" source="../tilesets/objects.tsx"/>
  <tileset firstgid="242" source="../tilesets/Grass.tsx"/>
  <tileset firstgid="245" source="../tilesets/indoor.tsx"/>
- <layer id="1" name="Terrain" width="24" height="34" visible="0">
+ <layer id="1" name="Terrain" width="24" height="34">
   <data encoding="csv">
 15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,
 15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,
@@ -101,7 +101,7 @@
    <point/>
   </object>
  </objectgroup>
- <layer id="13" name="Terrain Top" width="24" height="34" visible="0">
+ <layer id="13" name="Terrain Top" width="24" height="34">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -139,9 +139,9 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="9" name="Coast" visible="0"/>
- <objectgroup id="6" name="Monsters" visible="0"/>
- <objectgroup id="2" name="Objects" visible="0">
+ <objectgroup id="9" name="Coast"/>
+ <objectgroup id="6" name="Monsters"/>
+ <objectgroup id="2" name="Objects">
   <object id="879" gid="236" x="563" y="1036" width="60" height="60"/>
   <object id="884" gid="219" x="870.333" y="1227.33" width="64" height="128"/>
   <object id="907" gid="241" x="1175" y="1547" width="56" height="60"/>
@@ -217,7 +217,7 @@
   <object id="981" gid="237" x="792" y="1383.33" width="56" height="60"/>
   <object id="982" gid="237" x="534.667" y="1074" width="56" height="60"/>
  </objectgroup>
- <objectgroup id="12" name="Collisions" visible="0">
+ <objectgroup id="12" name="Collisions">
   <object id="985" x="551.596" y="1622.07" width="73.6241" height="351.759"/>
   <object id="986" x="784.155" y="1709.71" width="134.393" height="255.931"/>
   <object id="987" x="851.936" y="1651.28" width="102.84" height="74.7927"/>
@@ -266,7 +266,7 @@
   <object id="1031" x="639.244" y="1478.32" width="126.213" height="59.6004"/>
   <object id="1032" x="587.824" y="1550.78" width="114.526" height="51.42"/>
  </objectgroup>
- <objectgroup id="5" name="Transition" visible="0">
+ <objectgroup id="5" name="Transition">
   <object id="1033" x="647.875" y="1952.42" width="114.917" height="3.83333">
    <properties>
     <property name="pos" value="plant"/>
@@ -274,5 +274,5 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="10" name="Water" visible="0" locked="1"/>
+ <objectgroup id="10" name="Water" locked="1"/>
 </map>

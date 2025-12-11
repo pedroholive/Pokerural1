@@ -88,4 +88,7 @@
  <tile id="30">
   <image width="56" height="60" source="../../graphics/objects/sandrock2.png"/>
  </tile>
+ <tile id="31">
+  <image width="448" height="448" source="../../graphics/objects/house_large_deinfo.png"/>
+ </tile>
 </tileset>

@@ -267,19 +267,19 @@ MONSTER_DATA = {
     # --- FOGO ---
     'embercan': {
         'stats': {'element': 'fire', 'max_health': 60, 'max_energy': 50, 'attack': 50, 'defense': 40, 'recovery': 1.0, 'speed': 60},
-        'abilities': {0: 'scratch', 5: 'burn'},
+        'abilities': {0: 'arranhão', 5: 'brasas'},
         'graphic_path': 'graphics/monsters/embercan.png',
         'evolve': ('blazewhelp', 17)
     },
     'blazewhelp': {
         'stats': {'element': 'fire', 'max_health': 100, 'max_energy': 70, 'attack': 80, 'defense': 60, 'recovery': 1.0, 'speed': 75},
-        'abilities': {0: 'spark', 5: 'fire'},
+        'abilities': {0: 'faisca', 5: 'chamas'},
         'graphic_path': 'graphics/monsters/blazewhelp.png',
         'evolve': ('ignisblast', 36)
     },
     'ignisblast': {
         'stats': {'element': 'fire', 'max_health': 150, 'max_energy': 100, 'attack': 120, 'defense': 90, 'recovery': 1.0, 'speed': 70},
-        'abilities': {0: 'explosion', 5: 'annihilate'},
+        'abilities': {0: 'explosao', 5: 'aniquilar'},
         'graphic_path': 'graphics/monsters/ignisblast.png',
         'evolve': None
     },
@@ -287,19 +287,19 @@ MONSTER_DATA = {
     # --- PLANTA ---
     'sapling': {
         'stats': {'element': 'grass', 'max_health': 70, 'max_energy': 60, 'attack': 45, 'defense': 50, 'recovery': 1.0, 'speed': 70},
-        'abilities': {0: 'scratch', 5: 'annihilate'},
+        'abilities': {0: 'arranhão', 5: 'aniquilar'},
         'graphic_path': 'graphics/monsters/sagreen.png',
         'evolve': ('wardensawi', 16)
     },
     'wardensawi': {
         'stats': {'element': 'grass', 'max_health': 110, 'max_energy': 80, 'attack': 75, 'defense': 70, 'recovery': 1.0, 'speed': 85},
-        'abilities': {0: 'battlecry', 5: 'scratch'},
+        'abilities': {0: 'grito', 5: 'arranhão'},
         'graphic_path': 'graphics/monsters/wardensawi.png',
         'evolve': ('primalsauim', 36)
     },
     'primalsauim': {
         'stats': {'element': 'grass', 'max_health': 180, 'max_energy': 90, 'attack': 110, 'defense': 110, 'recovery': 1.0, 'speed': 60},
-        'abilities': {0: 'scratch', 5: 'annihilate'},
+        'abilities': {0: 'arranhão', 5: 'anniquilar'},
         'graphic_path': 'graphics/monsters/primalsauim.png',
         'evolve': None
     },
@@ -307,19 +307,19 @@ MONSTER_DATA = {
     # --- ÁGUA / TERRA ---
     'capiblu': {
         'stats': {'element': 'water', 'max_health': 90, 'max_energy': 50, 'attack': 40, 'defense': 60, 'recovery': 1.0, 'speed': 40},
-        'abilities': {0: 'scratch', 5: 'splash'},
+        'abilities': {0: 'arranhão', 5: 'jato'},
         'graphic_path': 'graphics/monsters/capiblu.png',
         'evolve': ('mudbrawler', 16)
     },
     'mudbrawler': {
         'stats': {'element': 'water', 'max_health': 115, 'max_energy': 65, 'attack': 75, 'defense': 100, 'recovery': 1.0, 'speed': 35},
-        'abilities': {0: 'scratch', 5: 'splash'},
+        'abilities': {0: 'arranhão', 5: 'jato'},
         'graphic_path': 'graphics/monsters/capiblu.png',
         'evolve': ('earthshroud', 36)
     },
     'earthshroud': {
         'stats': {'element': 'water', 'max_health': 200, 'max_energy': 80, 'attack': 90, 'defense': 130, 'recovery': 1.0, 'speed': 30},
-        'abilities': {0: 'explosion', 5: 'splash'},
+        'abilities': {0: 'explosão', 5: 'jato'},
         'graphic_path': 'graphics/monsters/earthshroud.png',
         'evolve': None
     },
@@ -327,37 +327,37 @@ MONSTER_DATA = {
     # --- VOADORES ---
     'araclaw': {
         'stats': {'element': 'flying', 'max_health': 50, 'max_energy': 50, 'attack': 60, 'defense': 30, 'recovery': 1.0, 'speed': 90},
-        'abilities': {0: 'scratch', 5: 'battlecry'},
+        'abilities': {0: 'arranhão', 5: 'grito'},
         'graphic_path': 'graphics/monsters/araclaw.png',
         'evolve': ('araguara', 15)
     },
     'araguara': {
         'stats': {'element': 'flying', 'max_health': 120, 'max_energy': 90, 'attack': 95, 'defense': 60, 'recovery': 1.0, 'speed': 110},
-        'abilities': {0: 'scratch', 5: 'annihilate'},
+        'abilities': {0: 'arranhão', 5: 'aniquilar'},
         'graphic_path': 'graphics/monsters/araguara.png',
         'evolve': ('ararablair', 33)
     },
     'ararablair':{
         'stats': {'element': 'flying', 'max_health': 200, 'max_energy': 130, 'attack': 95, 'defense': 60, 'recovery': 1.0, 'speed': 135},
-        'abilities': {0: 'scratch', 5: 'annihilate'},
+        'abilities': {0: 'arranhão', 5: 'aniquilar'},
         'graphic_path': 'graphics/monsters/ararablair.png',
         'evolve': None
     },
     'ibyracy': {
         'stats': {'element': 'flying', 'max_health': 130, 'max_energy': 80, 'attack': 110, 'defense': 70, 'recovery': 1.0, 'speed': 105},
-        'abilities': {0: 'scratch', 5: 'battlecry'},
+        'abilities': {0: 'arranhão', 5: 'grito'},
         'graphic_path': 'graphics/monsters/ibyracy.png',
         'evolve': None 
     },
     'carcalon': {
         'stats': {'element': 'flying', 'max_health': 90, 'max_energy': 70, 'attack': 90, 'defense': 55, 'recovery': 1.0, 'speed': 90},
-        'abilities': {0: 'scratch', 5: 'ice'},
+        'abilities': {0: 'arranhão', 5: 'congelar'},
         'graphic_path': 'graphics/monsters/carcalon.png',
         'evolve': ('ibyracy', 14)
     },
     'apexwing': {
         'stats': {'element': 'flying', 'max_health': 60, 'max_energy': 60, 'attack': 70, 'defense': 40, 'recovery': 1.0, 'speed': 80},
-        'abilities': {0: 'scratch', 5: 'fire'},
+        'abilities': {0: 'arranhão', 5: 'chamas'},
         'graphic_path': 'graphics/monsters/apexwing.png',
         'evolve': ('carcalon', 30)
     },
@@ -365,21 +365,21 @@ MONSTER_DATA = {
     # --- INSETOS ---
     'jatyglow': {
         'stats': {'element': 'bug', 'max_health': 80, 'max_energy': 80, 'attack': 80, 'defense': 60, 'recovery': 1.0, 'speed': 100},
-        'abilities': {0: 'scratch', 5: 'burn'},
+        'abilities': {0: 'arranhão', 5: 'brasas'},
         'graphic_path': 'graphics/monsters/jatyglow.png',
         'evolve': None 
     },
 }
 
 ATTACK_DATA = {
-    'burn': {'target': 'opponent', 'amount': 2, 'cost': 15, 'element': 'fire', 'animation': 'fire'},
-    'heal': {'target': 'player', 'amount': -1.2, 'cost': 60, 'element': 'plant', 'animation': 'green'},
-    'battlecry': {'target': 'player', 'amount': -1.4, 'cost': 20, 'element': 'normal', 'animation': 'green'},
-    'spark': {'target': 'opponent', 'amount': 1.1, 'cost': 20, 'element': 'fire', 'animation': 'fire'},
-    'scratch': {'target': 'opponent', 'amount': 1.2, 'cost': 20, 'element': 'normal', 'animation': 'scratch'},
-    'splash': {'target': 'opponent', 'amount': 2, 'cost': 15, 'element': 'water', 'animation': 'splash'},
-    'fire': {'target': 'opponent', 'amount': 2, 'cost': 15, 'element': 'fire', 'animation': 'fire'},
-    'explosion': {'target': 'opponent', 'amount': 2, 'cost': 90, 'element': 'fire', 'animation': 'explosion'},
-    'annihilate': {'target': 'opponent', 'amount': 3, 'cost': 30, 'element': 'fire', 'animation': 'explosion'},
-    'ice': {'target': 'opponent', 'amount': 2, 'cost': 15, 'element': 'water', 'animation': 'ice'},
+    'brasas': {'target': 'opponent', 'amount': 2, 'cost': 15, 'element': 'fire', 'animation': 'fire'},
+    'cura': {'target': 'player', 'amount': -1.2, 'cost': 60, 'element': 'plant', 'animation': 'green'},
+    'grito': {'target': 'player', 'amount': -1.4, 'cost': 20, 'element': 'normal', 'animation': 'green'},
+    'faisca': {'target': 'opponent', 'amount': 1.3, 'cost': 20, 'element': 'fire', 'animation': 'fire'},
+    'arranhão': {'target': 'opponent', 'amount': 1.2, 'cost': 20, 'element': 'normal', 'animation': 'scratch'},
+    'jato': {'target': 'opponent', 'amount': 2, 'cost': 15, 'element': 'water', 'animation': 'splash'},
+    'chamas': {'target': 'opponent', 'amount': 2, 'cost': 15, 'element': 'fire', 'animation': 'fire'},
+    'explosão': {'target': 'opponent', 'amount': 2, 'cost': 90, 'element': 'fire', 'animation': 'explosion'},
+    'aniquilar': {'target': 'opponent', 'amount': 3, 'cost': 30, 'element': 'fire', 'animation': 'explosion'},
+    'congelar': {'target': 'opponent', 'amount': 2, 'cost': 15, 'element': 'water', 'animation': 'ice'},
 }

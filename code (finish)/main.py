@@ -168,8 +168,19 @@ class Game:
 			BorderSprite((obj.x, obj.y), pygame.Surface((obj.width, obj.height)), self.collision_sprites)
 
 		# grass patches 
-		for obj in tmx_map.get_layer_by_name('Monsters'):
-			MonsterPatchSprite((obj.x, obj.y), obj.image, (self.all_sprites, self.monster_sprites), obj.properties['biome'], obj.properties['monsters'], obj.properties['level'])
+		for obj in tmx_map.objects:
+    # se não tiver as 3 propriedades → pula
+			if not all(p in obj.properties for p in ('biome', 'monsters', 'level')):
+				continue
+
+			MonsterPatchSprite(
+				(obj.x, obj.y),
+				obj.image,
+				(self.all_sprites, self.monster_sprites),
+				obj.properties['biome'],
+				obj.properties['monsters'],
+				obj.properties['level']
+			)
 
 		# entities 
 		for obj in tmx_map.get_layer_by_name('Entities'):
