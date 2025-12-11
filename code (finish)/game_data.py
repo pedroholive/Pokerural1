@@ -30,7 +30,7 @@ TRAINER_DATA = {
 		'biome': 'sand'
 		},
 	'o4': { # Floresta (Forest) - Evoluções
-		'monsters': {0: ('ignisblast', 25), 1: ('wardensawi', 20), 2: ('earthshroud', 24), 3: ('ararablair', 30)},
+		'monsters': {0: ('araclaw', 12), 1: ('apexwing', 12)},
 		'dialog': {
 			'default': ['Eu amo patinar!', 'LUTA!'],
 			'defeated': ['Boa sorte com o chefe', 'Está tão frio aqui']},
@@ -40,7 +40,7 @@ TRAINER_DATA = {
 		'biome': 'forest'
 		},
 	'o5': { # Floresta (Forest) - Evoluções
-		'monsters': {0: ('ibyracy', 20), 1: ('carcalon', 22), 2: ('apexwing', 24), 3: ('earthshroud', 19)},
+		'monsters': {0: ('ibyracy', 15), 2: ('apexwing', 12)},
 		'dialog': {
 			'default': ['Então você quer desafiar os grandões', 'Isso será divertido!'],
 			'defeated': ['Espero que os advogados nunca te encontrem', '<3']},
@@ -70,7 +70,7 @@ TRAINER_DATA = {
 		'biome': 'ice'
 		},
 	'p1': { # Floresta (Forest)
-		'monsters': {0: ('primalsauim', 25), 1: ('earthshroud', 20), 2: ('ignisblast', 24), 3: ('ararablair', 30)},
+		'monsters': {0: ('sapling', 12)},
 		'dialog': {
 			'default': ['Eu amo árvores', 'e lutas'],
 			'defeated': ['Boa sorte com o chefe!']},
@@ -80,7 +80,7 @@ TRAINER_DATA = {
 		'biome': 'forest'
 		},
 	'p2': { # Floresta (Forest)
-		'monsters': {0: ('primalsauim', 25), 1: ('earthshroud', 20), 2: ('ignisblast', 24), 3: ('ararablair', 30)},
+		'monsters': {0: ('sapling', 14)},
 		'dialog': {
 			'default': ['Eu amo árvores', 'e lutas'],
 			'defeated': ['Boa sorte com o chefe!']},
@@ -90,7 +90,7 @@ TRAINER_DATA = {
 		'biome': 'forest'
 		},
 	'p3': { # Floresta (Forest)
-		'monsters': {0: ('primalsauim', 25), 1: ('earthshroud', 20), 2: ('ignisblast', 24), 3: ('ararablair', 30)},
+		'monsters': {0: ('wardensawi', 15)},
 		'dialog': {
 			'default': ['Eu amo árvores', 'e lutas'],
 			'defeated': ['Boa sorte com o chefe!']},
@@ -100,7 +100,7 @@ TRAINER_DATA = {
 		'biome': 'forest'
 		},
 	'p4': { # Floresta (Forest)
-		'monsters': {0: ('primalsauim', 25), 1: ('earthshroud', 20), 2: ('ignisblast', 24), 3: ('ararablair', 30)},
+		'monsters': {0: ('wardensawi', 16)},
 		'dialog': {
 			'default': ['Eu amo árvores', 'e lutas'],
 			'defeated': ['Boa sorte com o chefe!']},
@@ -110,7 +110,7 @@ TRAINER_DATA = {
 		'biome': 'forest'
 		},
 	'px': { # Floresta (Forest)
-		'monsters': {0: ('primalsauim', 25), 1: ('earthshroud', 20), 2: ('ignisblast', 24), 3: ('ararablair', 30)},
+		'monsters': {0: ('wardensawi', 19), 1: ('sapling', 16)},
 		'dialog': {
 			'default': ['Eu amo árvores', 'e lutas'],
 			'defeated': ['Boa sorte com o chefe!']},

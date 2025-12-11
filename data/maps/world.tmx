@@ -9,7 +9,7 @@
  <tileset firstgid="246" name="coast" tilewidth="64" tileheight="64" tilecount="288" columns="24">
   <image source="../../graphics/tilesets/coast.png" width="1536" height="768"/>
  </tileset>
- <layer id="1" name="Terrain" width="86" height="86" visible="0">
+ <layer id="1" name="Terrain" width="86" height="86">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,272,42,42,16,72,72,72,16,15,15,15,43,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,272,42,42,42,6,72,72,16,15,15,15,54,33,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,
@@ -99,7 +99,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="13" name="Terrain Top" width="86" height="86" visible="0">
+ <layer id="13" name="Terrain Top" width="86" height="86">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -189,7 +189,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="3" name="Entities" visible="0">
+ <objectgroup id="3" name="Entities">
   <object id="13" name="Character" x="3506.5" y="4660.5">
    <properties>
     <property name="change_direction" type="bool" value="true"/>
@@ -1937,7 +1937,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="6" name="Monsters" visible="0">
+ <objectgroup id="6" name="Monsters">
   <object id="34" gid="242" x="4096" y="4096" width="64" height="64">
    <properties>
     <property name="biome" value="forest"/>
@@ -4739,7 +4739,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="2" name="Objects" visible="0">
+ <objectgroup id="2" name="Objects">
   <object id="1" gid="211" x="4352" y="3776" width="320" height="320"/>
   <object id="2" gid="226" x="3455.33" y="3783.33" width="128" height="192"/>
   <object id="3" gid="226" x="3264" y="3712" width="128" height="192"/>
@@ -5148,7 +5148,7 @@
   <object id="1134" x="1616" y="2085.75" width="352" height="58.5"/>
   <object id="1531" x="475.758" y="-639.394"/>
  </objectgroup>
- <objectgroup id="5" name="Transition" visible="0">
+ <objectgroup id="5" name="Transition">
   <object id="17" x="4421.09" y="3770.75" width="54.6667" height="3.83333">
    <properties>
     <property name="pos" value="world"/>
@@ -5180,7 +5180,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="10" name="Water" visible="0">
+ <objectgroup id="10" name="Water">
   <object id="136" x="5.0303" y="5054.06" width="5504" height="320"/>
   <object id="161" x="3648" y="2496" width="192" height="192"/>
   <object id="162" x="3840" y="2560" width="512" height="128"/>

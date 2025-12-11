@@ -66,19 +66,12 @@ class Battle:
 	def create_monster(self, monster, index, pos_index, entity):
 		monster.paused = False
 		
-		# 1. PADRONIZAÇÃO DA CHAVE
 		monster_key = monster.name.strip().lower()
 		
-		# 2. CARREGA TODOS OS DADOS DO MONSTRO
-		# Esta linha não deve causar erro se a padronização no main.py estiver correta
 		monster_data = self.monster_frames['monsters'][monster_key] 
 		
-		# 3. DEFINE OS FRAMES PRINCIPAIS
-		# A variável 'frames' é o dicionário de todos os estados (front, back, etc.)
-		# ATRIBUIÇÃO DE 'frames' AQUI:
 		frames = monster_data 
 		
-		# 4. DEFINE OS FRAMES DE OUTLINE (Com fallback)
 		if 'outlines' in monster_data:
 			outline_frames = monster_data['outlines']
 		else:
@@ -240,6 +233,41 @@ class Battle:
 		for timer in self.timers.values():
 			timer.update()
 
+	def normalize_indexes(self):
+    
+		p_list = self.player_sprites.sprites()
+		max_p = max(0, len(p_list) - 1)
+
+		if 'choose_attacker' in self.indexes:
+			self.indexes['choose_attacker'] = min(self.indexes['choose_attacker'], max_p)
+
+		if 'general' in self.indexes:
+			self.indexes['general'] = min(self.indexes['general'], len(BATTLE_CHOICES['full']) - 1)
+
+		# OPONENTE
+		o_list = self.opponent_sprites.sprites()
+		max_o = max(0, len(o_list) - 1)
+
+		if 'target' in self.indexes:
+			self.indexes['target'] = min(self.indexes['target'], max_o)
+
+		# SELEÇÃO DE ATAQUES
+		if self.current_monster:
+			abilities = self.current_monster.monster.get_abilities(all=False)
+			if abilities:
+				self.indexes['attacks'] = min(self.indexes['attacks'], len(abilities) - 1)
+			else:
+				self.indexes['attacks'] = 0
+
+	def ensure_attacker_is_valid(self):
+		sprites = self.player_sprites.sprites()
+		if not sprites:
+			return
+
+		idx = self.indexes['choose_attacker']
+		idx = min(idx, len(sprites) - 1)
+		
+		self.current_monster = sprites[idx]
 
 	# battle system
 	def check_active(self):
@@ -250,7 +278,7 @@ class Battle:
 				monster_sprite.monster.initiative = 0
 				monster_sprite.set_highlight(True)
 				self.current_monster = monster_sprite
-				if self.player_sprites in monster_sprite.groups():
+				if monster_sprite.entity == 'player':
 					self.selection_mode = 'general'
 				else:
 					self.timers['opponent delay'].activate()
@@ -292,25 +320,62 @@ class Battle:
 		self.update_all_monsters('resume')
 
 	def check_death(self):
-		for monster_sprite in self.opponent_sprites.sprites() + self.player_sprites.sprites():
-			if monster_sprite.monster.health <= 0:
-				if self.player_sprites in monster_sprite.groups(): # player
-					active_monsters = [(monster_sprite.index, monster_sprite.monster) for monster_sprite in self.player_sprites.sprites()]
-					available_monsters = [(index, monster) for index, monster in self.monster_data['player'].items() if monster.health > 0 and (index, monster) not in active_monsters]
-					if available_monsters:
-						new_monster_data = [(monster, index, monster_sprite.pos_index, 'player') for index, monster in available_monsters][0]
-					else:
-						new_monster_data = None
-				else:
-					new_monster_data = (list(self.monster_data['opponent'].values())[0], monster_sprite.index, monster_sprite.pos_index, 'opponent') if self.monster_data['opponent'] else None
-					if self.monster_data['opponent']:
-						del self.monster_data['opponent'][min(self.monster_data['opponent'])]
-					# xp
-					xp_amount = monster_sprite.monster.level * 100 / len(self.player_sprites)
-					for player_sprite in self.player_sprites:
-						player_sprite.monster.update_xp(xp_amount)
+		dead_sprites = []
 
-				monster_sprite.delayed_kill(new_monster_data)
+		for monster_sprite in self.player_sprites.sprites() + self.opponent_sprites.sprites():
+			if monster_sprite.monster.health <= 0:
+				dead_sprites.append(monster_sprite)
+
+		if not dead_sprites:
+			return
+
+		for monster_sprite in dead_sprites:
+
+			# se o monstro morto era o monstro atual → limpar antes de remover o sprite
+			if monster_sprite == self.current_monster:
+				self.current_monster = None
+				self.selection_mode = None
+
+			# PLAYER MORREU
+			if monster_sprite.entity == 'player':
+				active = [(s.index, s.monster) for s in self.player_sprites.sprites()]
+				available = [
+					(index, monster) 
+					for index, monster in self.monster_data['player'].items()
+					if monster.health > 0 and (index, monster) not in active
+				]
+
+				if available:
+					new_monster_data = (available[0][1], available[0][0], monster_sprite.pos_index, 'player')
+				else:
+					new_monster_data = None
+			
+			# OPONENTE MORREU
+			else:
+				if self.monster_data['opponent']:
+					# próximo monstro
+					next_index = sorted(self.monster_data['opponent'])[0]
+					new_monster_data = (
+						self.monster_data['opponent'][next_index],
+						monster_sprite.index,
+						monster_sprite.pos_index,
+						'opponent'
+					)
+					del self.monster_data['opponent'][next_index]
+				else:
+					new_monster_data = None
+
+				# XP
+				xp_amount = monster_sprite.monster.level * 100 / max(1, len(self.player_sprites))
+				for player_sprite in self.player_sprites:
+					player_sprite.monster.update_xp(xp_amount)
+
+			# remover sprite morto
+			monster_sprite.delayed_kill(new_monster_data)
+
+		# 2 - Ajustar índices após a morte
+		self.normalize_indexes()
+		self.ensure_attacker_is_valid()
 
 	def opponent_attack(self):
 		ability = choice(self.current_monster.monster.get_abilities())
@@ -375,9 +440,6 @@ class Battle:
 			if self.selection_mode == 'switch':
 				self.draw_switch()
 
-			# ============================================================
-			# 1) CÁLCULO DO TARGET INDEX SEGURO
-			# ============================================================
 			if hasattr(self, "selection_side") and self.selection_mode == "target":
 				if self.selection_side == "opponent":
 					max_targets = len(self.opponent_sprites)
@@ -392,11 +454,7 @@ class Battle:
 					target_index = 0
 			else:
 				target_index = 0
-			# ============================================================
-
-			# ============================================================
-			# 2) CHAMADA CORRETA DO DRAW()
-			# ============================================================
+			
 			self.battle_sprites.draw(
 				self.display_surface,
 				self.selection_side if hasattr(self, "selection_side") else None,
@@ -406,18 +464,13 @@ class Battle:
 				self.opponent_sprites
 			)
 
-			# ============================================================
-			# 3) CURSOR PARA ESCOLHER ATACANTE
-			# ============================================================
 			if self.selection_mode == "choose_attacker":
 				sprite_list = self.player_sprites.sprites()
 				if sprite_list:
 					attacker = sprite_list[self.indexes['choose_attacker']]
 					self.draw_cursor(attacker)
 
-			# ============================================================
-			# 4) CURSOR PARA ESCOLHER ALVO
-			# ============================================================
+			
 			if self.selection_mode == "target":
 				group = self.opponent_sprites if self.selection_side == 'opponent' else self.player_sprites
 				sprite_list = group.sprites()
@@ -521,7 +574,7 @@ class Battle:
 		self.update_timers()
 		self.battle_sprites.update(dt)
 		self.check_active()
-
+		self.normalize_indexes()
 		# drawing
 		self.display_surface.blit(self.bg_surf, (0,0))
 		self.battle_sprites.draw(self.current_monster, self.selection_side, self.selection_mode, self.indexes['target'], self.player_sprites, self.opponent_sprites)

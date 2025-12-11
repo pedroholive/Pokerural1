@@ -23,8 +23,8 @@ class Game:
 		pygame.init()
 		self.display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 		pygame.display.set_caption('PokeRural')
-		self.clock = pygame.time.Clock()
-		self.encounter_timer = Tempo(2000, func = self.monster_encounter)
+		self.clock = pygame.time.Clock() #limitar o fps
+		self.encounter_timer = Tempo(2000, func = self.monster_encounter) #gerencia o aparacimento dos encounters
 
 		# player monsters 
 		self.player_monsters = {
@@ -42,14 +42,14 @@ class Game:
 		}
 
 
-		# groups 
+		#organiza os sprites e as colisões
 		self.all_sprites = AllSprites()
 		self.collision_sprites = pygame.sprite.Group()
 		self.character_sprites = pygame.sprite.Group()
 		self.transition_sprites = pygame.sprite.Group()
 		self.monster_sprites = pygame.sprite.Group()
 
-		# transition / tint
+		#variáveis para controlar o efeito de transição da tela
 		self.transition_target = None
 		self.tint_surf = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT))
 		self.tint_mode = 'untint' 
@@ -57,29 +57,36 @@ class Game:
 		self.tint_direction = -1
 		self.tint_speed = 600
 
-		self.import_assets()
+		self.import_assets() # carregar as imagens e sons do jogo
 		self.player = None
 		self.setup(self.tmx_maps['world'], 'house')
-		self.audio['overworld'].play(-1)
+		self.audio['overworld'].play(-1) #inicia a música de fundo
 
-		# overlays 
+		#gerenciar as interfaces que aparecem no world
 		self.dialog_tree = None
 		self.monster_index = MonsterIndex(self.player_monsters, self.fonts, self.monster_frames)
 		self.index_open = False
 		self.battle = None
 		self.evolution = None
-
+		
+		# Carrega e exibe uma tela de título inicial
+		self.title_screen = pygame.image.load("graphics/Telainicial.png").convert()
+		self.title_screen = pygame.transform.scale(self.title_screen, (WINDOW_WIDTH, WINDOW_HEIGHT))
+		self.show_title = True
 
 	def import_assets(self):
+     
+		#Carrega os dados dos mapas que criamos que está no 'data'
 		self.tmx_maps = tmx_importer('data', 'maps')
 
-
+		#Carregas as animações de águas, costa e sprites dos personaggens
 		self.overworld_frames = {
 			'water': import_folder('graphics', 'tilesets', 'water'),
 			'coast': coast_importer(24, 12, 'graphics', 'tilesets', 'coast'),
 			'characters': all_character_import('graphics', 'characters')
 		}
-
+		
+		#Carrega dos icones, sprites de batalha e frames de ataque
 		self.monster_frames = {
         'icons': import_folder_dict('graphics', 'monsters'),
         'monsters': monster_importer(4, 2, 'graphics', 'monsters'),
@@ -87,37 +94,28 @@ class Game:
         'attacks': attack_importer('graphics', 'attacks')
     }
 
-		# --- INÍCIO DA CORREÇÃO ---
-		# 1. Carrega o dicionário de monstros brutos
+		
+		#  Carrega o dicionário de monstros brutos
 		raw_monsters = self.monster_frames['monsters']
 		
-		# 2. Cria um novo dicionário com chaves padronizadas (minúsculas e sem espaços)
 		standardized_monsters = {
 			name.strip().lower(): frames_data 
 			for name, frames_data in raw_monsters.items()
 		}
 		
-		# 3. Substitui o dicionário original pelo padronizado
+		
 		self.monster_frames['monsters'] = standardized_monsters
-		# --- FIM DA CORREÇÃO ---
 
+		#dicionario que pega o primeiro frame de animação de cada monstro, deixando estático 
 		self.icon_frames = {}
 
 		# Itera sobre cada monstro e seu dicionário de frames
 		for name, frames_dict in self.monster_frames['monsters'].items():
 		
-			# Usamos o primeiro valor (value) do frames_dict (que é a lista de frames, ex: [s1, s2])
-			
-			# Se você sabe que a chave é 'down' ou 'single' e corrigiu, use:
-			# frames_list = frames_dict['down'] 
-			
-			# Se você não tem certeza da chave de direção:
 			frames_list = list(frames_dict.values())[0]
 
-			# 2. O primeiro item da lista de frames é o nosso ícone estático.
 			static_icon = frames_list[0]
 			
-			# 3. Armazena no novo dicionário simples (nome do monstro: Superfície)
 			self.icon_frames[name] = static_icon
 
 
@@ -197,7 +195,10 @@ class Game:
 					nurse = obj.properties['character_id'] == 'Nurse',
 					notice_sound = self.audio['notice'])
 
-	# dialog system
+	
+	def draw_title_screen(self):
+		self.display_surface.blit(self.title_screen, (0, 0))
+    
 	def input(self):
 		if not self.dialog_tree and not self.battle:
 			keys = pygame.key.get_just_pressed()
@@ -325,13 +326,20 @@ class Game:
 	def run(self):
 		while True:
 			dt = self.clock.tick() / 1000
-			self.display_surface.fill('black')
-
-			# event loop 
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					pygame.quit()
 					exit()
+
+				# sair da tela inicial
+				if self.show_title and event.type == pygame.KEYDOWN:
+					self.show_title = False
+
+			# se ainda estiver na tela inicial → desenha e reinicia o loop
+			if self.show_title:
+				self.draw_title_screen()
+				pygame.display.update()
+				continue
 
 			# update 
 			self.encounter_timer.update()
@@ -344,20 +352,18 @@ class Game:
 			self.all_sprites.draw(self.player)
 			
 			# overlays 
-			if self.dialog_tree: self.dialog_tree.update()
-			if self.index_open:  self.monster_index.update(dt)
-			if self.battle:      self.battle.update(dt)
-			if self.evolution:   self.evolution.update(dt)
+			if self.dialog_tree:
+				self.dialog_tree.update()
+			if self.index_open:
+				self.monster_index.update(dt)
+			if self.battle:
+				self.battle.update(dt)
+			if self.evolution:
+				self.evolution.update(dt)
 
 			self.tint_screen(dt)
 			pygame.display.update()
-
-
-# ... (Todo o código da class Game fica igualzinho estava) ...
-
 if __name__ == '__main__':
 
-	# 3. RODA O JOGO (O evento principal)
-	# Quando o menu.run() terminar (der o break), o Python desce pra cá
 	game = Game()
 	game.run()
