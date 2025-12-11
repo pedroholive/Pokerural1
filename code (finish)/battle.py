@@ -14,6 +14,10 @@ class Battle:
 		self.bg_surf = bg_surf
 		self.monster_frames = monster_frames
 		self.fonts = fonts
+		
+		self.cursor_surf = pygame.Surface((20, 20), pygame.SRCALPHA)
+		pygame.draw.polygon(self.cursor_surf, (255, 255, 0), [(10, 0), (0, 20), (20, 20)])
+
 		self.monster_data = {'player': player_monsters, 'opponent': opponent_monsters}
 		self.battle_over = False
 		self.end_battle = end_battle
@@ -29,6 +33,10 @@ class Battle:
 		self.battle_sprites   = BattleSprites()
 		self.player_sprites   = pygame.sprite.Group()
 		self.opponent_sprites = pygame.sprite.Group()
+  
+		self.selecting_attacker = True
+		self.player_attacker_index = 0
+		self.selected_attacker = None
 
 		# control
 		self.current_monster = None
@@ -41,6 +49,7 @@ class Battle:
 			'attacks': 0,
 			'switch' : 0,
 			'target' : 0,
+			'choose_attacker': 0,
 		}
 
 		self.setup()
@@ -103,67 +112,129 @@ class Battle:
 		if self.selection_mode and self.current_monster:
 			keys = pygame.key.get_just_pressed()
 
+			# Limites para cada menu
 			match self.selection_mode:
-				case 'general': limiter = len(BATTLE_CHOICES['full'])
-				case 'attacks': limiter = len(self.current_monster.monster.get_abilities(all = False))
-				case 'switch': limiter = len(self.available_monsters)
-				case 'target': limiter = len(self.opponent_sprites) if self.selection_side == 'opponent' else len(self.player_sprites)
+				case 'general':         limiter = len(BATTLE_CHOICES['full'])
+				case 'choose_attacker': limiter = len(self.player_sprites)
+				case 'attacks':         limiter = len(self.current_monster.monster.get_abilities(all=False))
+				case 'switch':          limiter = len(self.available_monsters)
+				case 'target':
+					limiter = len(self.opponent_sprites) if self.selection_side == 'opponent' \
+						else len(self.player_sprites)
 
+			# Navegação
 			if keys[pygame.K_DOWN]:
 				self.indexes[self.selection_mode] = (self.indexes[self.selection_mode] + 1) % limiter
 			if keys[pygame.K_UP]:
 				self.indexes[self.selection_mode] = (self.indexes[self.selection_mode] - 1) % limiter
+
+			# CONFIRMAR ESCOLHA --------------------------------------
 			if keys[pygame.K_SPACE]:
-				
+
+				# ---------------------------------------------
+				# 1. TROCA (switch)
+				# ---------------------------------------------
 				if self.selection_mode == 'switch':
-					index, new_monster = list(self.available_monsters.items())[self.indexes['switch']]
+					switch_list = list(self.available_monsters.items())
+					if not switch_list:
+						self.selection_mode = "general"
+						return
+
+					if self.indexes['switch'] >= len(switch_list):
+						self.indexes['switch'] = len(switch_list) - 1
+
+					index, new_monster = switch_list[self.indexes['switch']]
+
+					old_pos = self.current_monster.pos_index
 					self.current_monster.kill()
-					self.create_monster(new_monster, index, self.current_monster.pos_index, 'player')
+					self.create_monster(new_monster, index, old_pos, 'player')
+
 					self.selection_mode = None
 					self.update_all_monsters('resume')
 
+				# ---------------------------------------------
+				# 2. ALVO (target)
+				# ---------------------------------------------
 				if self.selection_mode == 'target':
 					sprite_group = self.opponent_sprites if self.selection_side == 'opponent' else self.player_sprites
-					sprites = {sprite.pos_index: sprite for sprite in sprite_group}
-					monster_sprite = sprites[list(sprites.keys())[self.indexes['target']]]
+					sprite_list = sprite_group.sprites()
 
+					if self.indexes['target'] >= len(sprite_list):
+						self.indexes['target'] = len(sprite_list) - 1
+
+					target_sprite = sprite_list[self.indexes['target']]
+
+					# Ataque
 					if self.selected_attack:
-						self.current_monster.activate_attack(monster_sprite, self.selected_attack)
-						self.selected_attack, self.current_monster, self.selection_mode = None, None, None
-					else:
-						if monster_sprite.monster.health < monster_sprite.monster.get_stat('max_health') * 0.9:
-							self.monster_data['player'][len(self.monster_data['player'])] = monster_sprite.monster
-							monster_sprite.delayed_kill(None)
-							self.update_all_monsters('resume')
-						else:
-							TimedSprite(monster_sprite.rect.center, self.monster_frames['ui']['cross'], self.battle_sprites, 1000)
+						self.current_monster.activate_attack(target_sprite, self.selected_attack)
+						self.selected_attack = None
+						self.current_monster = None
+						self.selection_mode = None
+						return
 
+					# Captura (se não for ataque)
+					if target_sprite.monster.health < target_sprite.monster.get_stat('max_health') * 0.9:
+						self.monster_data['player'][len(self.monster_data['player'])] = target_sprite.monster
+						target_sprite.delayed_kill(None)
+						self.update_all_monsters('resume')
+					else:
+						TimedSprite(target_sprite.rect.center, self.monster_frames['ui']['cross'], self.battle_sprites, 1000)
+
+				# ---------------------------------------------
+				# 3. ESCOLHER HABILIDADE (attacks)
+				# ---------------------------------------------
 				if self.selection_mode == 'attacks':
 					self.selection_mode = 'target'
-					self.selected_attack = self.current_monster.monster.get_abilities(all = False)[self.indexes['attacks']]
+					self.indexes['target'] = 0
+					self.selected_attack = self.current_monster.monster.get_abilities(all=False)[self.indexes['attacks']]
 					self.selection_side = ATTACK_DATA[self.selected_attack]['target']
+					return
 
+				# ---------------------------------------------
+				# 4. MENU GERAL
+				# ---------------------------------------------
 				if self.selection_mode == 'general':
+					# OPC 0 — ATACAR → escolher atacante
 					if self.indexes['general'] == 0:
-						self.selection_mode = 'attacks'
-					
+						self.selection_mode = 'choose_attacker'
+						self.indexes['choose_attacker'] = 0
+						return
+
+					# OPC 1 — Defender
 					if self.indexes['general'] == 1:
 						self.current_monster.monster.defending = True
 						self.update_all_monsters('resume')
-						self.current_monster, self.selection_mode = None, None
-						self.indexes['general'] = 0
-					
+						self.current_monster = None
+						self.selection_mode = None
+						return
+
+					# OPC 2 — Trocar
 					if self.indexes['general'] == 2:
 						self.selection_mode = 'switch'
+						return
 
+					# OPC 3 — Escolher alvo direto
 					if self.indexes['general'] == 3:
 						self.selection_mode = 'target'
 						self.selection_side = 'opponent'
-				self.indexes = {k: 0 for k in self.indexes}
+						return
 
-			if keys[pygame.K_ESCAPE]:
-				if self.selection_mode in ('attacks', 'switch', 'target'):
-					self.selection_mode = 'general'
+				# ---------------------------------------------
+				# 5. ESCOLHER QUAL MONSTRO VAI ATACAR
+				# ---------------------------------------------
+				if self.selection_mode == 'choose_attacker':
+					sprite_list = self.player_sprites.sprites()
+
+					if self.indexes['choose_attacker'] >= len(sprite_list):
+						self.indexes['choose_attacker'] = len(sprite_list) - 1
+
+					# Define atacante
+					attacker_sprite = sprite_list[self.indexes['choose_attacker']]
+					self.current_monster = attacker_sprite
+
+					self.selection_mode = "attacks"
+					self.indexes['attacks'] = 0
+					return
 
 	def update_timers(self):
 		for timer in self.timers.values():
@@ -259,9 +330,43 @@ class Battle:
 			pygame.quit()
 			exit()
 
+	def draw_target_cursor(self):
+    # grupo do alvo
+		sprite_group = self.opponent_sprites if self.selection_side == 'opponent' else self.player_sprites
+		sprite_list = sprite_group.sprites()
 
-	# ui 
+		if not sprite_list:
+			return
+		
+		# proteger índice
+		if self.indexes['target'] >= len(sprite_list):
+			self.indexes['target'] = len(sprite_list) - 1
+
+		target_sprite = sprite_list[self.indexes['target']]
+
+		# posição do cursor acima do monstro
+		cursor_rect = self.cursor_surf.get_frect(
+			center = (target_sprite.rect.centerx, target_sprite.rect.top - 25)
+		)
+
+		self.display_surface.blit(self.cursor_surf, cursor_rect)
+
+	def draw_cursor(self, sprite):
+		if not sprite:
+			return
+
+		x, y = sprite.rect.centerx, sprite.rect.top - 15
+
+		points = [
+			(x, y),         # ponta
+			(x - 8, y + 12),
+			(x + 8, y + 12)
+		]
+
+		pygame.draw.polygon(self.display_surface, (255, 255, 0), points)
+    
 	def draw_ui(self):
+
 		if self.current_monster:
 			if self.selection_mode == 'general':
 				self.draw_general()
@@ -269,6 +374,57 @@ class Battle:
 				self.draw_attacks()
 			if self.selection_mode == 'switch':
 				self.draw_switch()
+
+			# ============================================================
+			# 1) CÁLCULO DO TARGET INDEX SEGURO
+			# ============================================================
+			if hasattr(self, "selection_side") and self.selection_mode == "target":
+				if self.selection_side == "opponent":
+					max_targets = len(self.opponent_sprites)
+				else:
+					max_targets = len(self.player_sprites)
+
+				target_index = self.indexes.get("target", 0)
+
+				if max_targets > 0:
+					target_index = max(0, min(target_index, max_targets - 1))
+				else:
+					target_index = 0
+			else:
+				target_index = 0
+			# ============================================================
+
+			# ============================================================
+			# 2) CHAMADA CORRETA DO DRAW()
+			# ============================================================
+			self.battle_sprites.draw(
+				self.display_surface,
+				self.selection_side if hasattr(self, "selection_side") else None,
+				self.selection_mode,
+				target_index,  # AGORA O ÍNDICE ESTÁ CORRETO
+				self.player_sprites,
+				self.opponent_sprites
+			)
+
+			# ============================================================
+			# 3) CURSOR PARA ESCOLHER ATACANTE
+			# ============================================================
+			if self.selection_mode == "choose_attacker":
+				sprite_list = self.player_sprites.sprites()
+				if sprite_list:
+					attacker = sprite_list[self.indexes['choose_attacker']]
+					self.draw_cursor(attacker)
+
+			# ============================================================
+			# 4) CURSOR PARA ESCOLHER ALVO
+			# ============================================================
+			if self.selection_mode == "target":
+				group = self.opponent_sprites if self.selection_side == 'opponent' else self.player_sprites
+				sprite_list = group.sprites()
+				if sprite_list:
+					target = sprite_list[target_index]   # ← usa o índice seguro aqui também
+					self.draw_cursor(target)
+
 
 	def draw_general(self):
 		for index, (option, data_dict) in enumerate(BATTLE_CHOICES['full'].items()):
