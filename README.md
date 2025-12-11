@@ -23,5 +23,5 @@ Para rodar o **PokeRural**, é necessário instalar as bibliotecas.
     Abra o terminal na pasta do projeto e execute:
     ```bash
     pip install pygame-ce
-    pip instal pytmx
+    pip install pytmx
     ```
